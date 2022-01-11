@@ -23,7 +23,7 @@ const unknownUser = function(userid, username){
 // --- Bot Code ---
 const Discord   = require("discord.js");
 const commands  = require('./commands'); // commands.js import
-
+const mPlus     = require('./mythicplus') // m+ Wow Import
 const client = new Discord.Client();
 const botUserID = '860605357343637535';
 
@@ -110,7 +110,21 @@ client.on("message", msg => {
 
   if(msg.content.startsWith("n;"))
   { 
-    if(msg.content.includes("@")){ // allow users to check anyones profile
+    // 8 BALL COMMANDS
+    if(msg.content.includes("?")){ // find question response
+      msg.channel.send(commands.parse("?"));
+    }
+    // WOW M+ COMMANDS
+    else if(msg.content.includes("affixes")){
+      if(msg.content.includes("next")){ // parse next
+        msg.channel.send(mPlus.getNextAffixes);
+      }
+      else {
+        msg.channel.send(mPlus.getAffixes);
+      }
+    }
+    // GACHA BOT AND USER PROFILE COMMANDS
+    else if(msg.content.includes("@")){ // allow users to check anyones profile
       // CONTENT WITH AN @ has form: <!@ USERID >
       var targets = msg.mentions.users.keys();
       for( var id of targets ) {
@@ -134,9 +148,6 @@ client.on("message", msg => {
         msg.channel.send(emb);
       });
     }
-    else if(msg.content.includes("?")){ // find question response
-      msg.channel.send(commands.parse("?"));
-    } 
     else {
       let lowerContent = msg.content.toLowerCase();
       // check if user command is in either profile or normal command map
